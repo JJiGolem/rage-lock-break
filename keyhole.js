@@ -1,6 +1,7 @@
 let keyholeRotation = 0;
 const keyholeRotateStep = 0.75;
 const keyholeRotateRestoreStep = 2.35;
+const successKeyholeRotate = Math.sign(randomInteger(-90, 90));
 
 function rotateKeyhole(evt) {
   const lockpickSuccess = checkLockpickRotate();
@@ -14,15 +15,22 @@ function rotateKeyhole(evt) {
   }
 
   const key = evt.keyCode;
-  let oldKeyholeRotation = keyholeRotation;
   if (key == 68) { // D
     keyholeRotation += keyholeRotateStep;
     keyholeRotation = Math.min(90, keyholeRotation + keyholeRotateStep);
+
+    if (successKeyholeRotate < 0 && keyholeRotation > 15) {
+      eventInfo = null;
+    }
   }
 
   if (key == 65) { // A
     keyholeRotation -= keyholeRotateStep;
     keyholeRotation = Math.max(-90, keyholeRotation - keyholeRotateStep);
+
+    if (successKeyholeRotate > 0 && keyholeRotation > 15) {
+      eventInfo = null;
+    }
   }
 
   if (!lockpickSuccess) {
