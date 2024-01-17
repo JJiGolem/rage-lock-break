@@ -1,11 +1,12 @@
-let lastMouse;
-let lockpickRotation = 0;
 const lockpickRotationMin = -50;
 const lockpickRotationMax = 110;
 const lockpickRotationSmooth = (window.innerWidth / 2) / (lockpickRotationMax - lockpickRotationMin);
 const successLockpickRotate = randomInteger(lockpickRotationMin, lockpickRotationMax);
+const lockpickMaxDamage = randomInteger(50, 100);
+
+let lastMouse;
+let lockpickRotation = 0;
 let lockpickDamage = 0;
-let lockpickMaxHealth = randomInteger(50, 100);
 
 window.addEventListener("mousemove", (evt) => {
   const mouse = {
@@ -17,8 +18,20 @@ window.addEventListener("mousemove", (evt) => {
     lockpickRotation += (mouse.x - lastMouse.x) / lockpickRotationSmooth;
     lockpickRotation = clamp(lockpickRotation, lockpickRotationMin, lockpickRotationMax);
   }
+  
   lastMouse = mouse;
 })
+
+function damageLockpick() {
+  eventInfo = null;
+  lockpickDamage += randomInteger(1, 5);
+
+  console.log(`MaxDamage: ${lockpickMaxDamage}`, `Damage: ${lockpickDamage}`)
+  
+  if (lockpickDamage >= lockpickMaxDamage) {
+    breakLockpick();
+  }
+}
 
 function breakLockpick() {
   console.log("lockpick broke")

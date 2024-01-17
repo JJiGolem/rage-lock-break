@@ -18,27 +18,18 @@ function rotateKeyhole(evt) {
   if (key == 68) { // D
     keyholeRotation += keyholeRotateStep;
     keyholeRotation = Math.min(90, keyholeRotation + keyholeRotateStep);
-
-    if (successKeyholeRotate < 0 && keyholeRotation > 15) {
-      eventInfo = null;
-    }
   }
 
   if (key == 65) { // A
     keyholeRotation -= keyholeRotateStep;
     keyholeRotation = Math.max(-90, keyholeRotation - keyholeRotateStep);
+  }
 
-    if (successKeyholeRotate > 0 && keyholeRotation > 15) {
-      eventInfo = null;
-    }
+  if (successKeyholeRotate != Math.sign(keyholeRotation) && keyholeRotation > 15) {
+    eventInfo = null;
   }
 
   if (!lockpickSuccess) {
-    eventInfo = null;
-    lockpickDamage += randomInteger(1, 5);
-    console.log(lockpickMaxHealth, lockpickDamage)
-    if (lockpickDamage > lockpickMaxHealth) {
-      breakLockpick();
-    }
+    damageLockpick();
   }
 }
