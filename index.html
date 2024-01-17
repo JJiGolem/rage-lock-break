@@ -10,14 +10,17 @@
 
 <body>
   <div class="lock">
-    <img src="./lock.svg" alt="lock">
-    <img id="keyhole" src="./keyhole.svg" alt="keyhole">
+    <div class="keyhole_main">
+      <img id="keyhole" src="./keyhole.png" alt="keyhole">
+      <img id="lockpick" src="./lockpick.png" alt="screwdriver">
+    </div>
   </div>
 
   <script>
     let eventInfo;
     let keyholeRotation = 0;
-    const keyholeRotateStep = 0.6;
+    let lockpickRotation = 0;
+    const keyholeRotateStep = 0.75;
 
     window.addEventListener("keydown", (evt) => {
       eventInfo = evt;
@@ -27,25 +30,55 @@
       eventInfo = null;
     })
 
+    let lastMouse;
+    const lockpickRotationMin = -50;
+    const lockpickRotationMax = 110;
+    const lockpickRotationSmooth = (window.innerWidth / 2) / (lockpickRotationMax - lockpickRotationMin);
+    window.addEventListener("mousemove", (evt) => {
+      const mouse = {
+        x: evt.clientX,
+        y: evt.clientY
+      }
+
+      if (lastMouse) {
+        lockpickRotation += (mouse.x - lastMouse.x) / lockpickRotationSmooth;
+        lockpickRotation = clamp(lockpickRotation, lockpickRotationMin, lockpickRotationMax);
+      }
+      lastMouse = mouse;
+    })
+
     animate();
 
     function animate() {
-      if (eventInfo && eventInfo.keyCode == 68) {
+      rotateKeyhole(eventInfo);
+      keyhole.style.transform = "rotateZ(" + keyholeRotation + "deg)";
+      lockpick.style.transform = "translate(-100%, -100%) rotateZ(" + lockpickRotation + "deg)";
+      requestAnimationFrame(animate);
+    }
+
+    function rotateKeyhole(evt) {
+      if (!evt) {
+        keyholeRotation -= Math.sign(keyholeRotation) * keyholeRotateStep * 1.5;
+        if (Math.abs(keyholeRotation) < keyholeRotateStep - 0.001) {
+          keyholeRotation = 0;
+        }
+        return;
+      }
+
+      const key = evt.keyCode;
+      if (key == 68) { // D
         keyholeRotation += keyholeRotateStep;
         keyholeRotation = Math.min(90, keyholeRotation + keyholeRotateStep);
       }
 
-      if (eventInfo && eventInfo.keyCode == 65) {
+      if (key == 65) { // A
         keyholeRotation -= keyholeRotateStep;
         keyholeRotation = Math.max(-90, keyholeRotation - keyholeRotateStep);
       }
-      
-      if (!eventInfo) {
-        keyholeRotation -= Math.sign(keyholeRotation) * keyholeRotateStep;
-      }
+    }
 
-      keyhole.style.transform = "translate(-50%,-50%) rotate(" + keyholeRotation + "deg)";
-      requestAnimationFrame(animate);
+    function clamp(num, min, max) {
+      return Math.min(Math.max(num, min), max);
     }
   </script>
 </body>
