@@ -31,5 +31,7 @@ function rotateKeyhole(evt) {
 
   if (!lockpickSuccess) {
     damageLockpick();
+  } else if (keyholeRotation == Math.sign(successKeyholeRotate) * 90) {
+    openLock();
   }
 }

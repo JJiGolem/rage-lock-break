@@ -16,11 +16,13 @@
     </div>
   </div>
 
+  <script src="./lock.js"></script>
   <script src="./utils.js"></script>
   <script src="./keyhole.js"></script>
   <script src="./lockpick.js"></script>
   <script>
     let eventInfo;
+    let isAnimate = true;
 
     window.addEventListener("keydown", (evt) => {
       eventInfo = evt;
@@ -36,7 +38,14 @@
       rotateKeyhole(eventInfo);
       keyhole.style.transform = "rotateZ(" + keyholeRotation + "deg)";
       lockpick.style.transform = "translate(-100%, -100%) rotateZ(" + lockpickRotation + "deg)";
-      requestAnimationFrame(animate);
+
+      if (isAnimate) {
+        requestAnimationFrame(animate);
+      }
+    }
+
+    function stopAnimate() {
+      isAnimate = false;
     }
   </script>
 </body>
