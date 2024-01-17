@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <title>Rage lock break</title>
+</head>
+
+<body>
+  <div class="lock">
+    <img src="./lock.svg" alt="lock">
+    <img id="keyhole" src="./keyhole.svg" alt="keyhole">
+  </div>
+
+  <script>
+    let eventInfo;
+    let keyholeRotation = 0;
+    const keyholeRotateStep = 0.6;
+
+    window.addEventListener("keydown", (evt) => {
+      eventInfo = evt;
+    })
+
+    window.addEventListener("keyup", (evt) => {
+      eventInfo = null;
+    })
+
+    animate();
+
+    function animate() {
+      if (eventInfo && eventInfo.keyCode == 68) {
+        keyholeRotation += keyholeRotateStep;
+        keyholeRotation = Math.min(90, keyholeRotation + keyholeRotateStep);
+      }
+
+      if (eventInfo && eventInfo.keyCode == 65) {
+        keyholeRotation -= keyholeRotateStep;
+        keyholeRotation = Math.max(-90, keyholeRotation - keyholeRotateStep);
+      }
+      
+      if (!eventInfo) {
+        keyholeRotation -= Math.sign(keyholeRotation) * keyholeRotateStep;
+      }
+
+      keyhole.style.transform = "translate(-50%,-50%) rotate(" + keyholeRotation + "deg)";
+      requestAnimationFrame(animate);
+    }
+  </script>
+</body>
+
+</html>
