@@ -81,5 +81,6 @@ function playOpenlockSound() {
     return;
   }
 
+  lockOpenSound.currentTime = 0.2; // move the beginning of the sound so that the initial pause disappears
   lockOpenSound.play();
 }
