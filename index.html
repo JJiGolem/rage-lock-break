@@ -29,9 +29,9 @@
   <script src="./utils.js"></script>
   <script src="./keyhole.js"></script>
   <script src="./lockpick.js"></script>
+  <script src="./fpscontrol.js"></script>
   <script>
     let pressedKey = null;
-    let isAnimate = true;
     let cooldown = null;
     let keyupFreeze = false;
     let keydownFreeze = false;
@@ -39,6 +39,12 @@
 
     keyholeInit();
     lockpickInit();
+
+    const fps = new FpsControl(30, (e) => {
+      animate();
+    });
+
+    fps.start();
 
     window.addEventListener("keydown", (evt) => {
       if (keydownFreeze) {
@@ -68,20 +74,14 @@
       rotateLockpick(evt);
     })
 
-    animate();
-
     function animate() {
       rotateKeyhole();
       keyhole.style.transform = "rotateZ(" + keyholeRotation + "deg)";
       lockpick.style.transform = "translate(-100%, -100%) rotateZ(" + lockpickRotation + "deg)";
-
-      if (isAnimate) {
-        requestAnimationFrame(animate);
-      }
     }
 
     function stopAnimate() {
-      isAnimate = false;
+      fps.pause();
     }
 
     function disablePressedKey() {
@@ -112,9 +112,8 @@
       keyholeInit();
       lockpickInit();
       
-      if (!isAnimate) {
-        isAnimate = true;
-        animate()
+      if (!fps.isPlaying) {
+        fps.start();
       }
     }
   </script>
