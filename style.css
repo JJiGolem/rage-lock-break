@@ -1,3 +1,14 @@
+* {
+  font-family: Arial, Helvetica, sans-serif;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: gray;
+}
+
 .lock {
   position: absolute;
   top: 50%;
@@ -27,4 +38,37 @@
   left: 50%;
   transform-origin: bottom right;
   transform: rotateZ(0deg)
+}
+
+.help_about_control {
+  position: absolute;
+  left: 50%;
+  bottom: 5vh;
+  transform: translate(-50%);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.help_element {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  padding: 1vh 3.5vh;
+  border-radius: 5vh;
+  font-weight: 600;
+  margin-right: 3vh;
+}
+
+.help_element:last-child {
+  margin-right: 0; 
+}
+
+.help_element span {
+  background-color: black;
+  border-radius: 1.2vh;
+  padding: 0.8vh 1.5vh;
+  color: white;
+  margin-right: 1vh;
+  font-weight: 700;
 }
