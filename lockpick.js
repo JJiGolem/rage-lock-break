@@ -8,7 +8,11 @@ let lastMouse;
 let lockpickRotation = 0;
 let lockpickDamage = 0;
 
-window.addEventListener("mousemove", (evt) => {
+function rotateLockpick(evt) {
+  if (mousemoveFreeze) {
+    return;
+  }
+
   const mouse = {
     x: evt.clientX,
     y: evt.clientY
@@ -20,7 +24,7 @@ window.addEventListener("mousemove", (evt) => {
   }
   
   lastMouse = mouse;
-})
+}
 
 function damageLockpick() {
   disablePressedKey();

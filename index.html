@@ -16,16 +16,22 @@
     </div>
   </div>
 
-  <script src="./lock.js"></script>
   <script src="./utils.js"></script>
   <script src="./keyhole.js"></script>
   <script src="./lockpick.js"></script>
   <script>
-    let cooldown = null;
     let pressedKey = null;
     let isAnimate = true;
+    let cooldown = null;
+    let keyupFreeze = false;
+    let keydownFreeze = false;
+    let mousemoveFreeze = false;
 
     window.addEventListener("keydown", (evt) => {
+      if (keydownFreeze) {
+        return;
+      }
+
       if ([68, 65].includes(evt.keyCode) && !cooldown) {
         pressedKey = evt.keyCode;
       } else {
@@ -34,8 +40,14 @@
     })
 
     window.addEventListener("keyup", (evt) => {
+      if (keyupFreeze) {
+        return;
+      }
+
       pressedKey = null;
     })
+
+    window.addEventListener("mousemove", rotateLockpick);
 
     animate();
 
@@ -56,6 +68,12 @@
     function disablePressedKey() {
       pressedKey = null;
       startCooldown();
+    }
+
+    function freezeAll() {
+      keydownFreeze = true;
+      keyupFreeze = true;
+      mousemoveFreeze = true;
     }
 
     function startCooldown() {
