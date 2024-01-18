@@ -9,10 +9,6 @@ let lockpickRotation = 0;
 let lockpickDamage = 0;
 
 function rotateLockpick(evt) {
-  if (mousemoveFreeze) {
-    return;
-  }
-
   const mouse = {
     x: evt.clientX,
     y: evt.clientY

@@ -47,7 +47,13 @@
       pressedKey = null;
     })
 
-    window.addEventListener("mousemove", rotateLockpick);
+    window.addEventListener("mousemove", (evt) => {
+      if (mousemoveFreeze) {
+        return;
+      }
+
+      rotateLockpick(evt);
+    })
 
     animate();
 

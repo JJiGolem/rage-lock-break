@@ -1,6 +1,7 @@
 const keyholeRotateStep = 0.75;
 const keyholeRotateRestoreStep = 2.35;
 const successKeyholeRotate = Math.sign(randomInteger(-90, 90));
+const lockOpenSound = new Audio("openlocksong.mp3");
 
 let keyholeRotation = 0;
 
@@ -72,12 +73,12 @@ function playOpenlockSound() {
     return;
   }
 
-  const song = new Audio("openlocksong.mp3");
-  song.play();
+  lockOpenSound.play();
   lockOpenAudio = setInterval(() => {
-    if (song.ended) {
+    if (lockOpenSound.ended) {
       clearInterval(lockOpenAudio);
       lockOpenAudio = null;
+      lockOpenSound.currentTime = 0;
     }
   }, 100)
 }
