@@ -26,7 +26,7 @@ function rotateKeyhole() {
     keyholeRotation = Math.max(-90, keyholeRotation - keyholeRotateStep);
   }
 
-  if (successKeyholeRotate != Math.sign(keyholeRotation) && keyholeRotation > 15) {
+  if (successKeyholeRotate != Math.sign(keyholeRotation) && Math.abs(keyholeRotation) > 15) {
     damageLockpick();
   }
 
