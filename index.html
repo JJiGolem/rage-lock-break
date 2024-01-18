@@ -21,21 +21,26 @@
   <script src="./keyhole.js"></script>
   <script src="./lockpick.js"></script>
   <script>
-    let eventInfo;
+    let cooldown = null;
+    let pressedKey = null;
     let isAnimate = true;
 
     window.addEventListener("keydown", (evt) => {
-      eventInfo = evt;
+      if ([68, 65].includes(evt.keyCode) && !cooldown) {
+        pressedKey = evt.keyCode;
+      } else {
+        pressedKey = null;
+      }
     })
 
     window.addEventListener("keyup", (evt) => {
-      eventInfo = null;
+      pressedKey = null;
     })
 
     animate();
 
     function animate() {
-      rotateKeyhole(eventInfo);
+      rotateKeyhole();
       keyhole.style.transform = "rotateZ(" + keyholeRotation + "deg)";
       lockpick.style.transform = "translate(-100%, -100%) rotateZ(" + lockpickRotation + "deg)";
 
@@ -46,6 +51,18 @@
 
     function stopAnimate() {
       isAnimate = false;
+    }
+
+    function disablePressedKey() {
+      pressedKey = null;
+      startCooldown();
+    }
+
+    function startCooldown() {
+      cooldown = setTimeout(() => {
+        clearTimeout(cooldown);
+        cooldown = null;
+      }, 100);
     }
   </script>
 </body>

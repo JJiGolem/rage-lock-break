@@ -23,7 +23,7 @@ window.addEventListener("mousemove", (evt) => {
 })
 
 function damageLockpick() {
-  eventInfo = null;
+  disablePressedKey();
   lockpickDamage += randomInteger(1, 5);
 
   console.log(`MaxDamage: ${lockpickMaxDamage}`, `Damage: ${lockpickDamage}`)
