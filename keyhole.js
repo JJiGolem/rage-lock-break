@@ -1,9 +1,14 @@
 const keyholeRotateStep = 0.75;
 const keyholeRotateRestoreStep = 2.35;
-const successKeyholeRotate = Math.sign(randomInteger(-90, 90));
 const lockOpenSound = new Audio("openlocksong.mp3");
 
 let keyholeRotation = 0;
+let successKeyholeRotate = 0;
+
+function keyholeInit() {
+  successKeyholeRotate = Math.sign(randomInteger(-90, 90));
+  console.log("keyhole: ", successKeyholeRotate)
+}
 
 function rotateKeyhole() {
   const lockpickSuccess = checkLockpickRotate();

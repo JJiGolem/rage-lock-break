@@ -37,6 +37,9 @@
     let keydownFreeze = false;
     let mousemoveFreeze = false;
 
+    keyholeInit();
+    lockpickInit();
+
     window.addEventListener("keydown", (evt) => {
       if (keydownFreeze) {
         return;
@@ -97,6 +100,22 @@
         clearTimeout(cooldown);
         cooldown = null;
       }, 100);
+    }
+
+    function restart() {
+      pressedKey = null;
+      keyupFreeze = false;
+      keydownFreeze = false;
+      mousemoveFreeze = false;
+      keyholeRotation = 0;
+      lockpickRotation = 0;
+      keyholeInit();
+      lockpickInit();
+      
+      if (!isAnimate) {
+        isAnimate = true;
+        animate()
+      }
     }
   </script>
 </body>

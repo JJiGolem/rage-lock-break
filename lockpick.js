@@ -1,12 +1,18 @@
 const lockpickRotationMin = -50;
 const lockpickRotationMax = 110;
 const lockpickRotationSmooth = (window.innerWidth / 2) / (lockpickRotationMax - lockpickRotationMin);
-const successLockpickRotate = randomInteger(lockpickRotationMin, lockpickRotationMax);
-const lockpickMaxDamage = randomInteger(50, 100);
 
 let lastMouse;
 let lockpickRotation = 0;
 let lockpickDamage = 0;
+let successLockpickRotate;
+let lockpickMaxDamage;
+
+function lockpickInit() {
+  successLockpickRotate = randomInteger(lockpickRotationMin, lockpickRotationMax);
+  lockpickMaxDamage = randomInteger(50, 100);
+  console.log("lockpick: ", successLockpickRotate, lockpickMaxDamage)
+}
 
 function rotateLockpick(evt) {
   const mouse = {
