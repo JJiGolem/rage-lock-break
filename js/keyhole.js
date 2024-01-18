@@ -1,6 +1,6 @@
 const keyholeRotateStep = 0.75;
 const keyholeRotateRestoreStep = 2.35;
-const lockOpenSound = new Audio("openlocksong.mp3");
+const lockOpenSound = new Audio("./audio/openlocksong.mp3");
 
 let keyholeRotation = 0;
 let successKeyholeRotate = 0;
