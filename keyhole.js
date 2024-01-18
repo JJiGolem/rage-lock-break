@@ -67,18 +67,14 @@ function openLock() {
   freezeAll();
 }
 
-let lockOpenAudio = null;
+lockOpenSound.onended = (event) => {
+  lockOpenSound.currentTime = 0;
+}
+
 function playOpenlockSound() {
-  if (lockOpenAudio) {
+  if (lockOpenSound.currentTime != 0) {
     return;
   }
 
   lockOpenSound.play();
-  lockOpenAudio = setInterval(() => {
-    if (lockOpenSound.ended) {
-      clearInterval(lockOpenAudio);
-      lockOpenAudio = null;
-      lockOpenSound.currentTime = 0;
-    }
-  }, 100)
 }
