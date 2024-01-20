@@ -1,3 +1,8 @@
+const lockpickDamageSound = new Audio("./audio/lockpickdamage.mp3")
+lockpickDamageSound.volume = 0.25;
+const lockpickBreakSound = new Audio("./audio/lockpickbreak.mp3");
+lockpickBreakSound.volume = 0.20;
+
 class Lockpick {
   #strength;
   #minRotation;
@@ -54,6 +59,8 @@ class Lockpick {
     
     if (this.#strength <= 0) {
       this.#break();
+    } else {
+      this.#playSound(lockpickDamageSound);
     }
 
     console.log("lockpick damaged...", { Strength: this.#strength, Damage: damage });
@@ -62,7 +69,13 @@ class Lockpick {
   #break() {
     this.keyhole.wrongRotateEvent.off = this.damageBind;
     this.#strength = 0;
+    this.#playSound(lockpickBreakSound);
     freezeAll();
     console.log("lockpick broken...")
+  }
+
+  #playSound(sound) {
+    sound.currentTime = 0;
+    sound.play();
   }
 }

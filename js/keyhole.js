@@ -1,4 +1,5 @@
 const lockOpenSound = new Audio("./audio/openlocksong.mp3");
+lockOpenSound.volume = 0.2;
 
 class Keyhole {
   #rotateStep;
