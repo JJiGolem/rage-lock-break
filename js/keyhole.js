@@ -5,17 +5,24 @@ class Keyhole {
   #restoreStep;
   #lockTurnWay;
 
-  constructor(domElement, rotateStep = 0.75, restoreStep = 2.35) {
+  constructor(
+    domElement,
+    latch,
+    rotateStep = 0.75,
+    restoreStep = 2.35,
+  ) {
     this.domElement = domElement;
+    this.latch = latch;
+
     this.#rotateStep = rotateStep;
     this.#restoreStep = restoreStep;
     this.#lockTurnWay = Math.sign(randomInteger(-90, 90)); // -1: left, 1: right
 
     this.rotation = 0;
 
-    console.log("keyholeLockTurnWay:", this.#lockTurnWay);
-
     this.wrongRotateEvent = new CEvent();
+    
+    console.log("keyholeLockTurnWay:", this.#lockTurnWay);
   }
 
   animate() {
@@ -25,8 +32,6 @@ class Keyhole {
   }
 
   rotate() {
-    const lockpickSuccess = m_lockpick.hasTrueRotation();
-
     if (!pressedKey) { // If the rotation keys are not pressed, return the keyhole to its original position
       this.rotation -= Math.sign(this.rotation) * this.#restoreStep;
       if (Math.abs(this.rotation) < this.#restoreStep - 0.001) {
@@ -52,7 +57,7 @@ class Keyhole {
       return;
     }
 
-    if (!lockpickSuccess) { // If the lock pick is turned at the wrong angle and we are trying to turn the keyhole
+    if (!this.latch.defused) { // If the lock pick is turned at the wrong angle and we are trying to turn the keyhole
       this.wrongRotateEvent.invoke();
     } else { // If the lock pick is in the correct position, we will try to open the lock
       this.#tryOpenLock();

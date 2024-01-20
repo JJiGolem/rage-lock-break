@@ -2,28 +2,24 @@ class Lockpick {
   #strength;
   #minRotation;
   #maxRotation;
-  #trueRotation;
   #smoothnessRotation;
   #lastMouse;
 
-  constructor(domElement, keyhole, minRotation = -50, maxRotation = 110) {
+  constructor(domElement, keyhole) {
     this.domElement = domElement;
     this.keyhole = keyhole;
 
     this.#strength = randomInteger(50, 100);
-    this.#minRotation = minRotation;
-    this.#maxRotation = maxRotation;
-    this.#trueRotation = randomInteger(this.#minRotation, this.#maxRotation);
+    this.#minRotation = this.keyhole.latch.minRotate;
+    this.#maxRotation = this.keyhole.latch.maxRotate;
     this.#smoothnessRotation = (window.innerWidth / 2) / (this.#maxRotation - this.#minRotation);
 
     this.rotation = 0;
 
-    console.log("lockpickRotate:", this.#trueRotation);
-    console.log("lockpickStrength:", this.#strength);
-
     this.damageBind = this.#damage.bind(this);
-    
     this.keyhole.wrongRotateEvent.on = this.damageBind;
+    
+    console.log("lockpickStrength:", this.#strength);
   }
 
   animate() {
@@ -42,14 +38,14 @@ class Lockpick {
       this.rotation += (mouse.x - this.#lastMouse.x) / this.#smoothnessRotation;
       this.rotation = clamp(this.rotation, this.#minRotation, this.#maxRotation);
     }
+
+    if (this.keyhole.latch.hasTrueRotation(this.rotation)) {
+      this.keyhole.latch.takeOff();
+    } else {
+      this.keyhole.latch.restore();
+    }
     
     this.#lastMouse = mouse;
-  }
-
-  hasTrueRotation() {
-    const eps = 0.001;
-    const inaccuracy = 5 + eps;
-    return Math.abs(this.rotation - this.#trueRotation) < inaccuracy;
   }
 
   #damage() {
@@ -64,7 +60,7 @@ class Lockpick {
   }
 
   #break() {
-    m_events.off(wrongRotateKeyhole_event, this.damageBind)
+    this.keyhole.wrongRotateEvent.off = this.damageBind;
     this.#strength = 0;
     freezeAll();
     console.log("lockpick broken...")
