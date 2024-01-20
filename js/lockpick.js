@@ -6,8 +6,9 @@ class Lockpick {
   #smoothnessRotation;
   #lastMouse;
 
-  constructor(domElement, minRotation = -50, maxRotation = 110) {
+  constructor(domElement, keyhole, minRotation = -50, maxRotation = 110) {
     this.domElement = domElement;
+    this.keyhole = keyhole;
 
     this.#strength = randomInteger(50, 100);
     this.#minRotation = minRotation;
@@ -19,6 +20,10 @@ class Lockpick {
 
     console.log("lockpickRotate:", this.#trueRotation);
     console.log("lockpickStrength:", this.#strength);
+
+    this.damageBind = this.#damage.bind(this);
+    
+    this.keyhole.wrongRotateEvent.on = this.damageBind;
   }
 
   animate() {
@@ -47,7 +52,7 @@ class Lockpick {
     return Math.abs(this.rotation - this.#trueRotation) < inaccuracy;
   }
 
-  damage() {
+  #damage() {
     const damage = randomInteger(1, 5);
     this.#strength -= damage;
     
@@ -59,8 +64,9 @@ class Lockpick {
   }
 
   #break() {
-    console.log("lockpick broken...")
+    m_events.off(wrongRotateKeyhole_event, this.damageBind)
     this.#strength = 0;
     freezeAll();
+    console.log("lockpick broken...")
   }
 }

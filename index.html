@@ -27,6 +27,7 @@
   </div>
 
   <script src="./js/utils.js"></script>
+  <script src="./js/cEvent.js"></script>
   <script src="./js/keyhole.js"></script>
   <script src="./js/lockpick.js"></script>
   <script src="./js/fpscontrol.js"></script>
@@ -36,9 +37,11 @@
     let keyupFreeze = false;
     let keydownFreeze = false;
     let mousemoveFreeze = false;
-
+    
     const m_keyhole = new Keyhole(keyhole_img);
-    const m_lockpick = new Lockpick(lockpick_img);
+    const m_lockpick = new Lockpick(lockpick_img, m_keyhole);
+
+    m_keyhole.wrongRotateEvent.on = disablePressedKey;
 
     const fps = new FpsControl(30, (e) => {
       m_keyhole.rotate();

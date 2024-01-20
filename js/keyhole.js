@@ -14,6 +14,8 @@ class Keyhole {
     this.rotation = 0;
 
     console.log("keyholeLockTurnWay:", this.#lockTurnWay);
+
+    this.wrongRotateEvent = new CEvent();
   }
 
   animate() {
@@ -46,13 +48,12 @@ class Keyhole {
 
     // If we try to turn the keyhole in the opposite direction available to us
     if (this.#lockTurnWay != Math.sign(this.rotation) && Math.abs(this.rotation) > 15) {
-      m_lockpick.damage();
-      disablePressedKey();
+      this.wrongRotateEvent.invoke();
+      return;
     }
 
     if (!lockpickSuccess) { // If the lock pick is turned at the wrong angle and we are trying to turn the keyhole
-      m_lockpick.damage();
-      disablePressedKey();
+      this.wrongRotateEvent.invoke();
     } else { // If the lock pick is in the correct position, we will try to open the lock
       this.#tryOpenLock();
     }
