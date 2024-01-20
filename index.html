@@ -11,8 +11,8 @@
 <body>
   <div class="lock">
     <div class="keyhole_main">
-      <img id="keyhole" src="./images/keyhole.png" alt="keyhole">
-      <img id="lockpick" src="./images/lockpick.png" alt="screwdriver">
+      <img id="keyhole_img" src="./images/keyhole.png" alt="keyhole">
+      <img id="lockpick_img" src="./images/lockpick.png" alt="screwdriver">
     </div>
   </div>
   <div class="help_about_control">
@@ -37,11 +37,13 @@
     let keydownFreeze = false;
     let mousemoveFreeze = false;
 
-    keyholeInit();
-    lockpickInit();
+    const m_keyhole = new Keyhole(keyhole_img);
+    const m_lockpick = new Lockpick(lockpick_img);
 
     const fps = new FpsControl(30, (e) => {
-      animate();
+      m_keyhole.rotate();
+      m_keyhole.animate();
+      m_lockpick.animate();
     });
 
     fps.start();
@@ -71,14 +73,8 @@
         return;
       }
 
-      rotateLockpick(evt);
+      m_lockpick.rotate(evt);
     })
-
-    function animate() {
-      rotateKeyhole();
-      keyhole.style.transform = "rotateZ(" + keyholeRotation + "deg)";
-      lockpick.style.transform = "translate(-100%, -100%) rotateZ(" + lockpickRotation + "deg)";
-    }
 
     function stopAnimate() {
       fps.pause();
@@ -100,21 +96,6 @@
         clearTimeout(cooldown);
         cooldown = null;
       }, 100);
-    }
-
-    function restart() {
-      pressedKey = null;
-      keyupFreeze = false;
-      keydownFreeze = false;
-      mousemoveFreeze = false;
-      keyholeRotation = 0;
-      lockpickRotation = 0;
-      keyholeInit();
-      lockpickInit();
-      
-      if (!fps.isPlaying) {
-        fps.start();
-      }
     }
   </script>
 </body>

@@ -1,49 +1,66 @@
-const lockpickRotationMin = -50;
-const lockpickRotationMax = 110;
-const lockpickRotationSmooth = (window.innerWidth / 2) / (lockpickRotationMax - lockpickRotationMin);
+class Lockpick {
+  #strength;
+  #minRotation;
+  #maxRotation;
+  #trueRotation;
+  #smoothnessRotation;
+  #lastMouse;
 
-let lastMouse;
-let lockpickRotation = 0;
-let lockpickDamage = 0;
-let successLockpickRotate;
-let lockpickMaxDamage;
+  constructor(domElement, minRotation = -50, maxRotation = 110) {
+    this.domElement = domElement;
 
-function lockpickInit() {
-  successLockpickRotate = randomInteger(lockpickRotationMin, lockpickRotationMax);
-  lockpickMaxDamage = randomInteger(50, 100);
-  console.log("lockpick: ", successLockpickRotate, lockpickMaxDamage)
-}
+    this.#strength = randomInteger(50, 100);
+    this.#minRotation = minRotation;
+    this.#maxRotation = maxRotation;
+    this.#trueRotation = randomInteger(this.#minRotation, this.#maxRotation);
+    this.#smoothnessRotation = (window.innerWidth / 2) / (this.#maxRotation - this.#minRotation);
 
-function rotateLockpick(evt) {
-  const mouse = {
-    x: evt.clientX,
-    y: evt.clientY
+    this.rotation = 0;
+
+    console.log("lockpickRotate:", this.#trueRotation);
+    console.log("lockpickStrength:", this.#strength);
   }
 
-  if (lastMouse) {
-    lockpickRotation += (mouse.x - lastMouse.x) / lockpickRotationSmooth;
-    lockpickRotation = clamp(lockpickRotation, lockpickRotationMin, lockpickRotationMax);
+  animate() {
+    if (this.domElement) {
+      this.domElement.style.transform = "translate(-100%, -100%) rotateZ(" + this.rotation + "deg)";
+    }
   }
+
+  rotate(evt) {
+    const mouse = {
+      x: evt.clientX,
+      y: evt.clientY
+    }
   
-  lastMouse = mouse;
-}
-
-function damageLockpick() {
-  disablePressedKey();
-  lockpickDamage += randomInteger(1, 5);
-
-  console.log(`MaxDamage: ${lockpickMaxDamage}`, `Damage: ${lockpickDamage}`)
-  
-  if (lockpickDamage >= lockpickMaxDamage) {
-    breakLockpick();
+    if (this.#lastMouse) {
+      this.rotation += (mouse.x - this.#lastMouse.x) / this.#smoothnessRotation;
+      this.rotation = clamp(this.rotation, this.#minRotation, this.#maxRotation);
+    }
+    
+    this.#lastMouse = mouse;
   }
-}
 
-function breakLockpick() {
-  console.log("lockpick broke")
-  lockpickDamage = 0;
-}
+  hasTrueRotation() {
+    const eps = 0.001;
+    const inaccuracy = 5 + eps;
+    return Math.abs(this.rotation - this.#trueRotation) < inaccuracy;
+  }
 
-function checkLockpickRotate() {
-  return Math.abs(lockpickRotation - successLockpickRotate) < (5 + 0.001);
+  damage() {
+    const damage = randomInteger(1, 5);
+    this.#strength -= damage;
+    
+    if (this.#strength <= 0) {
+      this.#break();
+    }
+
+    console.log("lockpick damaged...", { Strength: this.#strength, Damage: damage });
+  }
+
+  #break() {
+    console.log("lockpick broken...")
+    this.#strength = 0;
+    freezeAll();
+  }
 }

@@ -32,12 +32,12 @@ body {
   align-items: center;
 }
 
-#lockpick {
+#lockpick_img {
   position: absolute;
   top: 50%;
   left: 50%;
   transform-origin: bottom right;
-  transform: rotateZ(0deg)
+  transform: translate(-100%, -100%) rotateZ(0deg)
 }
 
 .help_about_control {
