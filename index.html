@@ -37,10 +37,6 @@
   <script src="./js/lockpick.js"></script>
   <script src="./js/fpscontrol.js"></script>
   <script>
-    if (window.mp) { // If this is the RAGE MP interface
-      document.body.style.backgroundColor = "transparent";
-    }
-
     const keyholeLockOpenMpEvent = "Client:LockBreak:KeyholeLockOpened";
     const lockpickBreakMpEvent = "Client:LockBreak:LockpickBroken";
     const lockbreakCancelMpEvent = "Client:LockBreak:Canceled";
@@ -49,6 +45,21 @@
     let cooldown = null;
     let controlsFreeze = false;
     let m_lockpick = null;
+
+    // We block the control until the elements are displayed
+    freezeControls();
+
+    // When all the resources are loaded and ready to work
+    window.onload = () => {
+      unFreezeControls();
+      fps.start();
+
+      if (window.mp) { // If this is the RAGE MP interface
+        document.body.style.backgroundColor = "transparent";
+      }
+
+      document.body.style.display = "block";
+    }
 
     // Subscribe keyhole events
     Keyhole.wrongRotateEvent.on = disablePressedKey;
@@ -82,7 +93,7 @@
       m_keyhole?.animate();
       m_lockpick?.animate();
     });
-    fps.start();
+
     Lockpick.createdEvent.on = () => fps.start();
 
     window.addEventListener("keydown", (evt) => {
