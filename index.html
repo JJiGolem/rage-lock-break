@@ -36,6 +36,11 @@
     if (window.mp) { // If this is the RAGE MP interface
       document.body.style.backgroundColor = "transparent";
     }
+
+    const keyholeLockOpenMpEvent = "Client:LockBreak:KeyholeLockOpened";
+    const lockpickBreakMpEvent = "Client:LockBreak:LockpickBroken";
+    const lockbreakCancelMpEvent = "Client:LockBreak:Canceled";
+
     let pressedKey = null;
     let cooldown = null;
     let controlsFreeze = false;
@@ -47,7 +52,7 @@
     Keyhole.lockOpenEvent.on = freezeControls;
     Keyhole.lockOpenEvent.on = (keyhole) => {
       if (window.mp && window.mp.trigger) {
-        window.mp.trigger("Client:KeyholeLockOpen");
+        window.mp.trigger(keyholeLockOpenMpEvent);
       }
     }
 
@@ -55,11 +60,11 @@
     Lockpick.breakEvent.on = freezeControls;
     Lockpick.breakEvent.on = (lockpick) => {
       if (window.mp && window.mp.trigger) {
-        window.mp.trigger("Client:LockpickBreak");
+        window.mp.trigger(lockpickBreakMpEvent);
       }
     }
     Lockpick.createdEvent.on = (lockpick) => {
-      console.log("lock pick created:", lockpick)
+      console.debug("lock pick created:", lockpick)
       m_lockpick = lockpick;
       unFreezeControls();
     }
