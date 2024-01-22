@@ -24,6 +24,10 @@
       <span>← 🖱 →</span>
       Повернуть отмычку
     </div>
+    <div class="help_element">
+      <span>ESC</span>
+      Отменить
+    </div>
   </div>
 
   <script src="./js/utils.js"></script>
@@ -94,6 +98,13 @@
     })
 
     window.addEventListener("keyup", (evt) => {
+      if (evt.keyCode == 27) {// ESC
+        if (window.mp && window.mp.trigger) {
+          window.mp.trigger(lockbreakCancelMpEvent);
+        }
+        return;
+      }
+
       if (controlsFreeze) {
         return;
       }
