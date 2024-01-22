@@ -71,7 +71,6 @@ class Lockpick {
     }
 
       console.debug("lockpick damaged...", { Strength: this.#strength, Damage: damage });
-    }
   }
 
   #break() {
