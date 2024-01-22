@@ -70,7 +70,9 @@ class Lockpick {
       this.#playSound(lockpickDamageSound);
     }
 
+    if (!window.mp) { // RAGE MP does not like frequent calls to console methods. The interface is starting to lag
       console.debug("lockpick damaged...", { Strength: this.#strength, Damage: damage });
+    }
   }
 
   #break() {
