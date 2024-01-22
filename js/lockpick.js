@@ -70,7 +70,8 @@ class Lockpick {
       this.#playSound(lockpickDamageSound);
     }
 
-    console.log("lockpick damaged...", { Strength: this.#strength, Damage: damage });
+      console.debug("lockpick damaged...", { Strength: this.#strength, Damage: damage });
+    }
   }
 
   #break() {
@@ -80,7 +81,7 @@ class Lockpick {
     this.#playSound(lockpickBreakSound);
     this.domElement.classList.add("animated");
     
-    console.log("lockpick broken...")
+    console.debug("lockpick broken...")
   }
 
   #playSound(sound) {

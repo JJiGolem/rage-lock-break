@@ -24,7 +24,7 @@ class Keyhole {
 
     this.rotation = 0;
     
-    console.log("keyholeLockTurnWay:", this.#lockTurnWay);
+    console.debug("keyholeLockTurnWay:", this.#lockTurnWay);
   }
 
   animate() {
@@ -82,7 +82,7 @@ class Keyhole {
   }
 
   #openLock() {
-    console.log("Lock opened...!");
+    console.debug("Lock opened...!");
     playOpenlockSound();
     Keyhole.lockOpenEvent.invoke(this);
   }

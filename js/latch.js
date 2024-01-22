@@ -6,7 +6,7 @@ class Latch {
     this.trueRotation = randomInteger(this.minRotate, this.maxRotate);
     this.defused = false;
 
-    console.log("latch true rotation:", this.trueRotation);
+    console.debug("latch true rotation:", this.trueRotation);
   }
 
   restore() {
