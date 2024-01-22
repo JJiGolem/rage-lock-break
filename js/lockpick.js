@@ -10,6 +10,9 @@ class Lockpick {
   #smoothnessRotation;
   #lastMouse;
 
+  static breakEvent = new CEvent();
+  static createdEvent = new CEvent();
+
   constructor(domElement, keyhole) {
     this.domElement = domElement;
     this.keyhole = keyhole;
@@ -22,9 +25,8 @@ class Lockpick {
     this.rotation = 0;
 
     this.damageBind = this.#damage.bind(this);
-    this.keyhole.wrongRotateEvent.on = this.damageBind;
-    
-    console.log("lockpickStrength:", this.#strength);
+    Keyhole.wrongRotateEvent.on = this.damageBind;
+    Lockpick.createdEvent.invoke(this);
   }
 
   animate() {
@@ -53,6 +55,10 @@ class Lockpick {
     this.#lastMouse = mouse;
   }
 
+  dispose() {
+    Keyhole.wrongRotateEvent.off = this.damageBind;
+  }
+
   #damage() {
     const damage = randomInteger(1, 5);
     this.#strength -= damage;
@@ -67,10 +73,11 @@ class Lockpick {
   }
 
   #break() {
-    this.keyhole.wrongRotateEvent.off = this.damageBind;
+    Lockpick.breakEvent.invoke(this);
+
     this.#strength = 0;
     this.#playSound(lockpickBreakSound);
-    freezeAll();
+    
     console.log("lockpick broken...")
   }
 

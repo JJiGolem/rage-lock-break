@@ -6,6 +6,9 @@ class Keyhole {
   #restoreStep;
   #lockTurnWay;
 
+  static wrongRotateEvent = new CEvent();
+  static lockOpenEvent = new CEvent();
+
   constructor(
     domElement,
     latch,
@@ -20,8 +23,6 @@ class Keyhole {
     this.#lockTurnWay = Math.sign(randomInteger(-90, 90)); // -1: left, 1: right
 
     this.rotation = 0;
-
-    this.wrongRotateEvent = new CEvent();
     
     console.log("keyholeLockTurnWay:", this.#lockTurnWay);
   }
@@ -54,12 +55,12 @@ class Keyhole {
 
     // If we try to turn the keyhole in the opposite direction available to us
     if (this.#lockTurnWay != Math.sign(this.rotation) && Math.abs(this.rotation) > 15) {
-      this.wrongRotateEvent.invoke();
+      Keyhole.wrongRotateEvent.invoke(this);
       return;
     }
 
     if (!this.latch.defused) { // If the lock pick is turned at the wrong angle and we are trying to turn the keyhole
-      this.wrongRotateEvent.invoke();
+      Keyhole.wrongRotateEvent.invoke(this);
     } else { // If the lock pick is in the correct position, we will try to open the lock
       this.#tryOpenLock();
     }
@@ -73,13 +74,6 @@ class Keyhole {
 
     // We take the unsigned rotation angle to determine the progress of the opening
     const absRotate = Math.abs(this.rotation);
-    // If the keyhole is almost rotated to the maximum value
-    if (absRotate >= 90 - this.#rotateStep * 5) {
-      // We block the control of the lock and lock pick
-      freezeAll();
-      // We start playing the sound of the lock opening
-      playOpenlockSound();
-    }
 
     // If the angle of rotation is very close to the maximum, then open our lock
     if (absRotate >= 90 - 0.001) {
@@ -89,8 +83,8 @@ class Keyhole {
 
   #openLock() {
     console.log("Lock opened...!");
-    stopAnimate();
-    freezeAll();
+    playOpenlockSound();
+    Keyhole.lockOpenEvent.invoke(this);
   }
 }
 

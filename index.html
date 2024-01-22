@@ -35,26 +35,46 @@
   <script>
     let pressedKey = null;
     let cooldown = null;
-    let keyupFreeze = false;
-    let keydownFreeze = false;
-    let mousemoveFreeze = false;
+    let controlsFreeze = false;
+    let m_lockpick = null;
+
+    // Subscribe keyhole events
+    Keyhole.wrongRotateEvent.on = disablePressedKey;
+    Keyhole.lockOpenEvent.on = stopAnimate;
+    Keyhole.lockOpenEvent.on = freezeControls;
+    Keyhole.lockOpenEvent.on = (keyhole) => {
+      if (window.mp && window.mp.trigger) {
+        window.mp.trigger("Client:KeyholeLockOpen");
+      }
+    }
+
+    // Subscribe lockpick events
+    Lockpick.breakEvent.on = freezeControls;
+    Lockpick.breakEvent.on = (lockpick) => {
+      if (window.mp && window.mp.trigger) {
+        window.mp.trigger("Client:LockpickBreak");
+      }
+    }
+    Lockpick.createdEvent.on = (lockpick) => {
+      console.log("lock pick created:", lockpick)
+      m_lockpick = lockpick;
+      unFreezeControls();
+    }
     
     const m_latch = new Latch();
     const m_keyhole = new Keyhole(keyhole_img, m_latch);
-    const m_lockpick = new Lockpick(lockpick_img, m_keyhole);
-
-    m_keyhole.wrongRotateEvent.on = disablePressedKey;
+    createLockpick();
 
     const fps = new FpsControl(30, (e) => {
-      m_keyhole.rotate();
-      m_keyhole.animate();
-      m_lockpick.animate();
+      m_keyhole?.rotate();
+      m_keyhole?.animate();
+      m_lockpick?.animate();
     });
-
     fps.start();
+    Lockpick.createdEvent.on = () => fps.start();
 
     window.addEventListener("keydown", (evt) => {
-      if (keydownFreeze) {
+      if (controlsFreeze) {
         return;
       }
 
@@ -66,7 +86,7 @@
     })
 
     window.addEventListener("keyup", (evt) => {
-      if (keyupFreeze) {
+      if (controlsFreeze) {
         return;
       }
 
@@ -74,11 +94,11 @@
     })
 
     window.addEventListener("mousemove", (evt) => {
-      if (mousemoveFreeze) {
+      if (controlsFreeze) {
         return;
       }
 
-      m_lockpick.rotate(evt);
+      m_lockpick?.rotate(evt);
     })
 
     function stopAnimate() {
@@ -90,10 +110,12 @@
       startCooldown();
     }
 
-    function freezeAll() {
-      keydownFreeze = true;
-      keyupFreeze = true;
-      mousemoveFreeze = true;
+    function freezeControls() {
+      controlsFreeze = true;
+    }
+
+    function unFreezeControls() {
+      controlsFreeze = false;
     }
 
     function startCooldown() {
@@ -101,6 +123,23 @@
         clearTimeout(cooldown);
         cooldown = null;
       }, 100);
+    }
+
+    function createLockpick() {
+      if (!lockpick_img || !(lockpick_img instanceof HTMLImageElement)) {
+        throw "LockpickDom is null"
+      }
+
+      if (!m_keyhole || !(m_keyhole instanceof Keyhole)) {
+        throw "Keyhole is null";
+      }
+
+      if (m_lockpick && m_lockpick instanceof Lockpick) {
+        m_lockpick.dispose();
+        console.log("lockpick disposed")
+      }
+
+      new Lockpick(lockpick_img, m_keyhole);
     }
   </script>
 </body>
