@@ -72,3 +72,21 @@ body {
   margin-right: 1vh;
   font-weight: 700;
 }
+
+@keyframes spin-and-shrink {
+  0% {
+    transform: translate(-100%, -100%) scale(1) rotate(0deg);
+  }
+  100% {
+    transform: translate(-30%, -30%) scale(0) rotate(360deg);
+  }
+}
+
+.animated {
+  animation-name: spin-and-shrink;
+  animation-duration: 2s;
+  animation-iteration-count: 1;
+  animation-direction: normal;
+  animation-fill-mode: forwards;
+  overflow: visible;
+}

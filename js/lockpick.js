@@ -57,6 +57,7 @@ class Lockpick {
 
   dispose() {
     Keyhole.wrongRotateEvent.off = this.damageBind;
+    this.domElement.classList.remove("animated");
   }
 
   #damage() {
@@ -77,6 +78,7 @@ class Lockpick {
 
     this.#strength = 0;
     this.#playSound(lockpickBreakSound);
+    this.domElement.classList.add("animated");
     
     console.log("lockpick broken...")
   }
